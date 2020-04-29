@@ -5,14 +5,16 @@ import java.time.Instant;
 public class UserProfile {
     private Long id;
     private String username;
-    private String name;
+    private String fullname;
     private Instant joinedAt;
+    private long artCount;
 
-    public UserProfile(Long id, String username, String name, Instant joinedAt) {
+    public UserProfile(Long id, String username, String fullname, Instant joinedAt, long artCount) {
         this.id = id;
         this.username = username;
-        this.name = name;
+        this.fullname = fullname;
         this.joinedAt = joinedAt;
+        this.artCount = artCount;
 }
 
     public Long getId() {
@@ -31,12 +33,12 @@ public class UserProfile {
         this.username = username;
     }
 
-    public String getName() {
-        return name;
+    public String getFullname() {
+        return fullname;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setFullname(String name) {
+        this.fullname = name;
     }
 
     public Instant getJoinedAt() {
@@ -45,5 +47,13 @@ public class UserProfile {
 
     public void setJoinedAt(Instant joinedAt) {
         this.joinedAt = joinedAt;
+    }
+
+    public long getArtCount() {
+        return artCount;
+    }
+
+    public void setArtCount(long artCount) {
+        this.artCount = artCount;
     }
 }

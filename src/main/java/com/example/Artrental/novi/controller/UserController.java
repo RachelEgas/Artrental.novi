@@ -3,10 +3,10 @@ package com.example.Artrental.novi.controller;
 import com.example.Artrental.novi.exception.ResourceNotFoundException;
 import com.example.Artrental.novi.model.User;
 import com.example.Artrental.novi.payload.*;
+import com.example.Artrental.novi.repository.ArtRepository;
 import com.example.Artrental.novi.repository.UserRepository;
 import com.example.Artrental.novi.security.UserPrincipal;
 import com.example.Artrental.novi.security.CurrentUser;
-import com.example.Artrental.novi.util.AppConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +19,9 @@ public class UserController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private ArtRepository artRepository;
 
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
@@ -45,8 +48,8 @@ public class UserController {
     public UserProfile getUserProfile(@PathVariable(value = "username") String username) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
-
-        UserProfile userProfile = new UserProfile(user.getId(), user.getUsername(), user.getName(), user.getCreatedAt());
+        long artCount = artRepository.countByCreatedBy(user.getId());
+        UserProfile userProfile = new UserProfile(user.getId(), user.getUsername(), user.getFullname(), user.getCreatedAt(), artCount);
 
         return userProfile;
     }
