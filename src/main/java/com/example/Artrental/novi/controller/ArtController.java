@@ -12,6 +12,7 @@ import com.example.Artrental.novi.security.UserPrincipal;
 import com.example.Artrental.novi.service.ArtService;
 import com.example.Artrental.novi.util.AppConstants;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -34,14 +35,14 @@ public class ArtController {
     private ArtService artService;
 
     @GetMapping
-    public PagedResponse<ArtResponse> getPolls(@CurrentUser UserPrincipal currentUser,
+    public PagedResponse<ArtResponse> getArt(@CurrentUser UserPrincipal currentUser,
                                                @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
                                                @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) {
         return artService.getAllArt(currentUser, page, size);
     }
 
-    @PostMapping
-    @PreAuthorize("hasRole('ROLE_STAFF')")
+    @PostMapping(path = "/create", consumes = MediaType.APPLICATION_JSON_VALUE)
+//    @PreAuthorize("hasRole('ROLE_STAFF')")
     public ResponseEntity<?> createArt(@Valid @RequestBody ArtRequest artRequest) {
         Art art = artService.createArt(artRequest);
 

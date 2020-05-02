@@ -15,10 +15,10 @@ public class ArtResponse {
     private String title;
     private Boolean inRental;
     private String description;
-    private ArtCategory category;
     private Double rentalPrice;
     private UserSummary createdBy;
     private Instant creationDateTime;
+    private String artImage;
 
     public long getId() {
         return id;
@@ -52,14 +52,6 @@ public class ArtResponse {
         this.description = description;
     }
 
-    public ArtCategory getCategory() {
-        return category;
-    }
-
-    public void setCategory(ArtCategory category) {
-        this.category = category;
-    }
-
     public Double getRentalPrice() {
         return rentalPrice;
     }
@@ -82,5 +74,13 @@ public class ArtResponse {
 
     public void setCreationDateTime(Instant creationDateTime) {
         this.creationDateTime = creationDateTime;
+    }
+
+    public String getArtImage() {
+        return artImage;
+    }
+
+    public void setArtImage(String artImage) {
+        this.artImage = artImage;
     }
 }

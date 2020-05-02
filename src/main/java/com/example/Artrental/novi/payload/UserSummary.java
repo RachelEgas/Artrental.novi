@@ -3,12 +3,12 @@ package com.example.Artrental.novi.payload;
 public class UserSummary {
     private Long id;
     private String username;
-    private String name;
+    private String fullname;
 
-    public UserSummary(Long id, String username, String name) {
+    public UserSummary(Long id, String username, String fullname) {
         this.id = id;
         this.username = username;
-        this.name = name;
+        this.fullname = fullname;
     }
 
     public Long getId() {
@@ -27,11 +27,11 @@ public class UserSummary {
         this.username = username;
     }
 
-    public String getName() {
-        return name;
+    public String getFullname() {
+        return fullname;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setFullname(String fullname) {
+        this.fullname = fullname;
     }
 }

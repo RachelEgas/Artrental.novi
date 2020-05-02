@@ -12,6 +12,7 @@ import com.example.Artrental.novi.repository.UserRepository;
 import com.example.Artrental.novi.security.UserPrincipal;
 import com.example.Artrental.novi.util.AppConstants;
 import com.example.Artrental.novi.util.ModelMapper;
+import com.fasterxml.jackson.databind.ser.Serializers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,11 +23,14 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.awt.*;
+import java.io.*;
+import java.net.URLConnection;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.Collections;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -38,7 +42,6 @@ public class ArtService {
 
     @Autowired
     UserRepository userRepository;
-
     private static final Logger logger = LoggerFactory.getLogger(ArtService.class);
 
     public PagedResponse<ArtResponse> getAllArt(UserPrincipal currentUser, int page, int size) {
@@ -95,8 +98,9 @@ public class ArtService {
         art.setDescription(artRequest.getDescription());
         art.setRentalPrice(artRequest.getRentalPrice());
         art.setCreatedAt(Instant.now());
-
-        return artRepository.save(art);
+        artRepository.save(art);
+        writeArtImageToDirectory(artRequest.getArtImage(), art.getId());
+        return art;
     }
 
     public ArtResponse getArtById(Long artId, UserPrincipal currentUser) {
@@ -133,5 +137,53 @@ public class ArtService {
                 .collect(Collectors.toMap(User::getId, Function.identity()));
 
         return creatorMap;
+    }
+
+    private void writeArtImageToDirectory(String image, long artId){
+        String[] parts = image.split("[,]");
+        byte[] decoded = Base64.getDecoder().decode(parts[1]);
+        FileOutputStream outputStream = null;
+
+        try {
+            String fileExtension = findFileExtension(decoded);
+            if(checkFileExtensionAllowed(fileExtension))
+            {
+                String path = AppConstants.ART_IMAGE_DIR + artId + ".jpg";
+                outputStream = new FileOutputStream(path);
+                outputStream.write(decoded);
+                outputStream.flush();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if(outputStream != null){
+                try {
+                    outputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    private Boolean checkFileExtensionAllowed(String extension){
+        String[] allowedExtensions = {".jpg", ".jpeg", ".png" };
+        return Arrays.stream(allowedExtensions).anyMatch(extension::equals);
+    }
+
+    private String findFileExtension(byte[] imageByteArray) throws IOException {
+        InputStream is = new ByteArrayInputStream(imageByteArray);
+        //Find out image type
+        String mimeType = null;
+        String fileExtension = null;
+        try {
+            mimeType = URLConnection.guessContentTypeFromStream(is);
+            String delimiter="[/]";
+            String[] tokens = mimeType.split(delimiter);
+            fileExtension = tokens[1];
+        } catch (IOException ioException){
+            ioException.printStackTrace();
+        }
+        return '.' + fileExtension;
     }
 }

@@ -7,6 +7,9 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.awt.image.BufferedImage;
+import java.io.*;
+import java.util.Base64;
 
 @Entity
 @Table(name = "art")
@@ -67,5 +70,13 @@ public class Art extends UserDateAudit {
 
     public void setRentalPrice(Double rentalprice) {
         this.rentalprice = rentalprice;
+    }
+
+    public void setImage(String image) throws FileNotFoundException {
+
+    }
+
+    public String getImage(){
+        return "";
     }
 }

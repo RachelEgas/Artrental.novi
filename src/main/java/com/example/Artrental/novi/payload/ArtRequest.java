@@ -27,7 +27,7 @@ public class ArtRequest {
     private Double rentalPrice;
 
     @NotNull
-    private Base64 artImage;
+    private String artImage;
 
     public String getTitle() {
         return title;
@@ -61,11 +61,11 @@ public class ArtRequest {
         this.rentalPrice = rentalPrice;
     }
 
-    public Base64 getArtImage() {
+    public String getArtImage() {
         return artImage;
     }
 
-    public void setArtImage(Base64 artImage) {
+    public void setArtImage(String artImage) {
         this.artImage = artImage;
     }
 }
