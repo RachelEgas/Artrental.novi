@@ -1,8 +1,10 @@
 package com.example.Artrental.novi.util;
 
 import com.example.Artrental.novi.model.Art;
+import com.example.Artrental.novi.model.Rent;
 import com.example.Artrental.novi.model.User;
 import com.example.Artrental.novi.payload.ArtResponse;
+import com.example.Artrental.novi.payload.RentResponse;
 import com.example.Artrental.novi.payload.UserSummary;
 
 import java.io.IOException;
@@ -29,6 +31,17 @@ public class ModelMapper {
         artResponse.setCreatedBy(creatorSummary);
 
         return artResponse;
+    }
+
+    public static RentResponse mapRentToRentResponse(Rent rent, User creator){
+        RentResponse rentResponse = new RentResponse();
+        rentResponse.setId(rent.getId());
+        rentResponse.setCreationDateTime(Instant.now());
+
+        UserSummary creatorSummary = new UserSummary(creator.getId(), creator.getUsername(), creator.getFullname());
+        rentResponse.setCreatedBy(creatorSummary);
+
+        return rentResponse;
     }
 
     private static String readArtImageFromDirectory(long artId){

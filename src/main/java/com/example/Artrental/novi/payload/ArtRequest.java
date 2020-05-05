@@ -1,15 +1,8 @@
 package com.example.Artrental.novi.payload;
 
-import com.example.Artrental.novi.model.ArtCategory;
-
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.Base64;
 
 public class ArtRequest {
     @NotBlank
