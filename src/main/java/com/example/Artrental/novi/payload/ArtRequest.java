@@ -6,14 +6,14 @@ import javax.validation.constraints.Size;
 
 public class ArtRequest {
     @NotBlank
-    @Size(min=5, max = 50)
+    @Size(min=1, max = 50)
     private String title;
 
     @NotNull
     private Boolean inRental;
 
     @NotBlank
-    @Size(min=5, max = 200)
+    @Size(min=1, max = 200)
     private String description;
 
     @NotNull

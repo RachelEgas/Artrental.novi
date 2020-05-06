@@ -30,7 +30,7 @@ public class RentService {
         rent.setArt(rentRequest.getArt());
         rent.setPeriod(rentRequest.getPeriod());
         rent.setTotal(rentRequest.getTotal());
-
+        rent.setPayed(rentRequest.getPayed());
         rent.setCreatedAt(Instant.now());
         return rent;
     }

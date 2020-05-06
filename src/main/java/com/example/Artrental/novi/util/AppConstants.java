@@ -5,5 +5,5 @@ public interface AppConstants {
     String DEFAULT_PAGE_SIZE = "30";
     String ART_IMAGE_DIR = "C:\\artrental.novi.images\\";
     int MAX_PAGE_SIZE = 50;
-    String TEST_MOLLIE_KEY = "test_JjBSN9ec7qPdqMvvHr4yUqMvgxvGCf";
+    String TEST_API_MOLLIE_KEY = "test_JjBSN9ec7qPdqMvvHr4yUqMvgxvGCf";
 }

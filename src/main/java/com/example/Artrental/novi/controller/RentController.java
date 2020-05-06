@@ -18,6 +18,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.validation.Valid;
 import java.net.URI;
 
+import static com.example.Artrental.novi.util.AppConstants.TEST_API_MOLLIE_KEY;
+
 @RestController
 @RequestMapping("/api/rent")
 public class RentController {
@@ -40,5 +42,10 @@ public class RentController {
     public RentResponse getRentById(@CurrentUser UserPrincipal currentUser,
                                     @PathVariable Long rentId) {
         return rentService.getRentById(rentId, currentUser);
+    }
+
+    @GetMapping("/mollie_key")
+    public String getMollieApiKey() {
+        return TEST_API_MOLLIE_KEY;
     }
 }

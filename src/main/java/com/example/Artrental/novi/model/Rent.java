@@ -29,6 +29,8 @@ public class Rent extends UserDateAudit {
     @NotNull
     private Double total;
 
+    private Boolean Payed;
+
     public Rent(){}
 
     public long getId() {
@@ -61,5 +63,13 @@ public class Rent extends UserDateAudit {
 
     public void setTotal(Double total) {
         this.total = total;
+    }
+
+    public Boolean getPayed() {
+        return Payed;
+    }
+
+    public void setPayed(Boolean payed) {
+        Payed = payed;
     }
 }
