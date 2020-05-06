@@ -55,8 +55,8 @@ public class ArtController {
     }
 
     @GetMapping("/{artId}")
-    public ArtResponse getPollById(@CurrentUser UserPrincipal currentUser,
-                                   @PathVariable Long artId) {
+    public ArtResponse getArtById(@CurrentUser UserPrincipal currentUser,
+                                  @PathVariable Long artId) {
         return artService.getArtById(artId, currentUser);
     }
 }

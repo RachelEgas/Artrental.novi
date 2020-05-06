@@ -7,6 +7,8 @@ import com.example.Artrental.novi.repository.ArtRepository;
 import com.example.Artrental.novi.repository.UserRepository;
 import com.example.Artrental.novi.security.UserPrincipal;
 import com.example.Artrental.novi.security.CurrentUser;
+import com.example.Artrental.novi.service.ArtService;
+import com.example.Artrental.novi.util.AppConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,9 @@ public class UserController {
 
     @Autowired
     private ArtRepository artRepository;
+
+    @Autowired
+    private ArtService artService;
 
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
@@ -52,5 +57,13 @@ public class UserController {
         UserProfile userProfile = new UserProfile(user.getId(), user.getUsername(), user.getFullname(), user.getCreatedAt(), artCount);
 
         return userProfile;
+    }
+
+    @GetMapping("/users/{username}/art")
+    public PagedResponse<ArtResponse> getArtCreatedBy(@PathVariable(value = "username") String username,
+                                                      @CurrentUser UserPrincipal currentUser,
+                                                      @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
+                                                      @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) {
+        return artService.getArtCreatedBy(username, currentUser, page, size);
     }
 }
