@@ -4,6 +4,7 @@ import com.example.Artrental.novi.exception.ResourceNotFoundException;
 import com.example.Artrental.novi.model.User;
 import com.example.Artrental.novi.payload.*;
 import com.example.Artrental.novi.repository.ArtRepository;
+import com.example.Artrental.novi.repository.RentRepository;
 import com.example.Artrental.novi.repository.UserRepository;
 import com.example.Artrental.novi.security.UserPrincipal;
 import com.example.Artrental.novi.security.CurrentUser;
@@ -27,6 +28,9 @@ public class UserController {
 
     @Autowired
     private ArtService artService;
+
+    @Autowired
+    private RentRepository rentRepository;
 
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
@@ -53,8 +57,13 @@ public class UserController {
     public UserProfile getUserProfile(@PathVariable(value = "username") String username) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
-        long artCount = artRepository.countByCreatedBy(user.getId());
-        UserProfile userProfile = new UserProfile(user.getId(), user.getUsername(), user.getFullname(), user.getCreatedAt(), artCount);
+        UserProfile userProfile = new UserProfile(
+                user.getId(),
+                user.getUsername(),
+                user.getFullname(),
+                user.getCreatedAt(),
+                artRepository.countByCreatedBy(user.getId()),
+                rentRepository.countByCreatedBy(user.getId()));
 
         return userProfile;
     }

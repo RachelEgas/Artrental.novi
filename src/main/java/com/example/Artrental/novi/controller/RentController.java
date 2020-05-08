@@ -6,6 +6,7 @@ import com.example.Artrental.novi.payload.ApiResponse;
 import com.example.Artrental.novi.payload.ArtResponse;
 import com.example.Artrental.novi.payload.RentRequest;
 import com.example.Artrental.novi.payload.RentResponse;
+import com.example.Artrental.novi.payload.mollie.PaymentCreateResponse;
 import com.example.Artrental.novi.security.CurrentUser;
 import com.example.Artrental.novi.security.UserPrincipal;
 import com.example.Artrental.novi.service.RentService;
@@ -16,7 +17,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
+import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URISyntaxException;
 
 import static com.example.Artrental.novi.util.AppConstants.TEST_API_MOLLIE_KEY;
 
@@ -28,14 +31,24 @@ public class RentController {
 
     @PostMapping(path = "/create", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> createRent(@Valid @RequestBody RentRequest rentRequest) {
-        Rent rent = rentService.createRent(rentRequest);
+        PaymentCreateResponse response = null;
+        try {
+            response = rentService.createRent(rentRequest);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest().path("/{rentId}")
-                .buildAndExpand(rent.getId()).toUri();
+                .buildAndExpand(response.getMetadata().getOrder_id()).toUri();
 
         return ResponseEntity.created(location)
-                .body(new ApiResponse(true, "Rental order Created Successfully"));
+                .body(new ApiResponse(
+                        true,
+                        "Rental order Created Successfully",
+                        response.get_links().getCheckout().getHref()));
     }
 
     @GetMapping("/{rentId}")
