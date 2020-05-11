@@ -3,12 +3,13 @@ package com.example.Artrental.novi.model;
 import com.example.Artrental.novi.model.audit.UserDateAudit;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.jetbrains.annotations.Range;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @Table(name = "rent")
@@ -18,7 +19,8 @@ public class Rent extends UserDateAudit {
     private long id;
 
     @NotNull
-    @Size(max = 12, min = 3)
+    @Min(3)
+    @Max(12)
     private int period;
 
     @OneToOne(fetch = FetchType.LAZY)
@@ -30,6 +32,8 @@ public class Rent extends UserDateAudit {
     private Double total;
 
     private Boolean Payed;
+
+    private String molliePaymentId;
 
     public Rent(){}
 
@@ -71,5 +75,13 @@ public class Rent extends UserDateAudit {
 
     public void setPayed(Boolean payed) {
         Payed = payed;
+    }
+
+    public String getMolliePaymentId() {
+        return molliePaymentId;
+    }
+
+    public void setMolliePaymentId(String molliePaymentId) {
+        this.molliePaymentId = molliePaymentId;
     }
 }

@@ -8,13 +8,15 @@ public class UserProfile {
     private String fullname;
     private Instant joinedAt;
     private long artCount;
+    private long rentCount;
 
-    public UserProfile(Long id, String username, String fullname, Instant joinedAt, long artCount) {
+    public UserProfile(Long id, String username, String fullname, Instant joinedAt, long artCount, long rentCount) {
         this.id = id;
         this.username = username;
         this.fullname = fullname;
         this.joinedAt = joinedAt;
         this.artCount = artCount;
+        this.rentCount = rentCount;
 }
 
     public Long getId() {
@@ -55,5 +57,13 @@ public class UserProfile {
 
     public void setArtCount(long artCount) {
         this.artCount = artCount;
+    }
+
+    public long getRentCount() {
+        return rentCount;
+    }
+
+    public void setRentCount(long rentCount) {
+        this.rentCount = rentCount;
     }
 }
