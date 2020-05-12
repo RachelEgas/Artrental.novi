@@ -11,6 +11,7 @@ import com.example.Artrental.novi.repository.ArtRepository;
 import com.example.Artrental.novi.repository.UserRepository;
 import com.example.Artrental.novi.security.UserPrincipal;
 import com.example.Artrental.novi.util.AppConstants;
+import com.example.Artrental.novi.util.Helpers;
 import com.example.Artrental.novi.util.ModelMapper;
 import com.fasterxml.jackson.databind.ser.Serializers;
 import org.slf4j.Logger;
@@ -22,12 +23,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.awt.*;
 import java.io.*;
 import java.net.URLConnection;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
 import java.util.List;
@@ -45,7 +42,7 @@ public class ArtService {
     private static final Logger logger = LoggerFactory.getLogger(ArtService.class);
 
     public PagedResponse<ArtResponse> getAllArt(UserPrincipal currentUser, int page, int size) {
-        validatePageNumberAndSize(page, size);
+        Helpers.validatePageNumberAndSize(page, size);
 
         // Retrieve art
         Pageable pageable = PageRequest.of(page, size, Sort.Direction.DESC, "createdAt");
@@ -68,7 +65,7 @@ public class ArtService {
     }
 
     public PagedResponse<ArtResponse> getArtCreatedBy(String username, UserPrincipal currentUser, int page, int size) {
-        validatePageNumberAndSize(page, size);
+        Helpers.validatePageNumberAndSize(page, size);
 
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
@@ -112,17 +109,6 @@ public class ArtService {
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", art.getCreatedBy()));
 
         return ModelMapper.mapArtToArtResponse(art, creator);
-    }
-
-
-    private void validatePageNumberAndSize(int page, int size) {
-        if(page < 0) {
-            throw new BadRequestException("Page number cannot be less than zero.");
-        }
-
-        if(size > AppConstants.MAX_PAGE_SIZE) {
-            throw new BadRequestException("Page size must not be greater than " + AppConstants.MAX_PAGE_SIZE);
-        }
     }
 
     Map<Long, User> getArtCreatorMap(List<Art> arts) {

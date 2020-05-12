@@ -25,7 +25,6 @@ public class ModelMapper {
         artResponse.setCreationDateTime(art.getCreatedAt());
         artResponse.setArtImage(readArtImageFromDirectory(art.getId()));
         Instant now = Instant.now();
-        //artResponse.setExpired(art.getExpirationDateTime().isBefore(now));
 
         UserSummary creatorSummary = new UserSummary(creator.getId(), creator.getUsername(), creator.getFullname());
         artResponse.setCreatedBy(creatorSummary);
@@ -37,7 +36,9 @@ public class ModelMapper {
         RentResponse rentResponse = new RentResponse();
         rentResponse.setId(rent.getId());
         rentResponse.setCreationDateTime(Instant.now());
-
+        rentResponse.setArt(rent.getArt());
+        rentResponse.setTotal(rent.getTotal());
+        rentResponse.setPeriod(rent.getPeriod());
         UserSummary creatorSummary = new UserSummary(creator.getId(), creator.getUsername(), creator.getFullname());
         rentResponse.setCreatedBy(creatorSummary);
 

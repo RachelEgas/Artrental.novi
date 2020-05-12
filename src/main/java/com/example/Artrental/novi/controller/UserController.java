@@ -9,6 +9,7 @@ import com.example.Artrental.novi.repository.UserRepository;
 import com.example.Artrental.novi.security.UserPrincipal;
 import com.example.Artrental.novi.security.CurrentUser;
 import com.example.Artrental.novi.service.ArtService;
+import com.example.Artrental.novi.service.RentService;
 import com.example.Artrental.novi.util.AppConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +32,9 @@ public class UserController {
 
     @Autowired
     private RentRepository rentRepository;
+
+    @Autowired
+    private RentService rentService;
 
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
@@ -74,5 +78,13 @@ public class UserController {
                                                       @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
                                                       @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) {
         return artService.getArtCreatedBy(username, currentUser, page, size);
+    }
+
+    @GetMapping("/users/{username}/rent")
+    public PagedResponse<RentResponse> getRentCreatedBy(@PathVariable(value = "username")String username,
+                                                        @CurrentUser UserPrincipal currentUser,
+                                                        @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
+                                                        @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size){
+        return rentService.getRentCreatedBy(username, currentUser, page, size);
     }
 }
