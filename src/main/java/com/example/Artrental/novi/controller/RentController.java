@@ -13,6 +13,7 @@ import com.example.Artrental.novi.service.RentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -30,6 +31,7 @@ public class RentController {
     private RentService rentService;
 
     @PostMapping(path = "/create", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> createRent(@Valid @RequestBody RentRequest rentRequest) {
         PaymentCreateResponse response = null;
         try {
@@ -52,12 +54,14 @@ public class RentController {
     }
 
     @GetMapping("/{rentId}")
+    @PreAuthorize("hasRole('USER')")
     public RentResponse getRentById(@CurrentUser UserPrincipal currentUser,
                                     @PathVariable Long rentId) {
         return rentService.getRentById(rentId, currentUser);
     }
 
     @GetMapping("/mollie_key")
+    @PreAuthorize("hasRole('USER')")
     public String getMollieApiKey() {
         return TEST_API_MOLLIE_KEY;
     }
