@@ -7,6 +7,7 @@ import com.example.Artrental.novi.payload.ArtResponse;
 import com.example.Artrental.novi.payload.RentRequest;
 import com.example.Artrental.novi.payload.RentResponse;
 import com.example.Artrental.novi.payload.mollie.PaymentCreateResponse;
+import com.example.Artrental.novi.repository.RentRepository;
 import com.example.Artrental.novi.security.CurrentUser;
 import com.example.Artrental.novi.security.UserPrincipal;
 import com.example.Artrental.novi.service.RentService;
@@ -64,5 +65,11 @@ public class RentController {
     @PreAuthorize("hasRole('USER')")
     public String getMollieApiKey() {
         return TEST_API_MOLLIE_KEY;
+    }
+
+    @PostMapping(path = "/postPaymentToken", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public void postPaymentToken(String id){
+        rentService.GetPaymentAndSaveResponseToRent(id);
     }
 }

@@ -6,6 +6,7 @@ import com.example.Artrental.novi.payload.mollie.Json.amount;
 import com.example.Artrental.novi.payload.mollie.Json.metadata;
 import com.example.Artrental.novi.payload.mollie.PaymentCreateRequest;
 import com.example.Artrental.novi.payload.mollie.PaymentCreateResponse;
+import com.example.Artrental.novi.payload.mollie.PaymentStatusResponse;
 import com.example.Artrental.novi.repository.ArtRepository;
 import com.example.Artrental.novi.repository.RentRepository;
 import com.example.Artrental.novi.repository.UserRepository;
@@ -55,6 +56,24 @@ public class PaymentService {
         return result;
     }
 
+    public ResponseEntity<PaymentStatusResponse> getMolliePayment(String id) throws MalformedURLException, URISyntaxException {
+        String uri = API_MOLLIE_PAYMENT_URI + id;
+
+        RestTemplate restTemplate = new RestTemplate();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "bearer " + TEST_API_MOLLIE_KEY);
+        HttpEntity<String> request = new HttpEntity<String>("", headers);
+
+        RequestEntity<PaymentStatusResponse> requestEntity = (RequestEntity<PaymentStatusResponse>) RequestEntity
+                .get(new URL(uri).toURI())
+                .headers(headers);
+
+        ResponseEntity<PaymentStatusResponse> result = restTemplate.exchange(requestEntity, PaymentStatusResponse.class);
+
+        return result;
+    }
+
     private PaymentCreateRequest createPaymentRequest(Rent rent){
         PaymentCreateRequest request = new PaymentCreateRequest();
         DecimalFormat f = new DecimalFormat("##.00");
@@ -65,7 +84,7 @@ public class PaymentService {
 
         metadata metadata = new metadata();
         metadata.setOrder_id(String.valueOf(rent.getId()));
-
+        request.setWebhookUrl(MOLLIE_PAYMENT_STATUS_WEBHOOK);
         request.setAmount(amount);
         request.setDescription("Order " + rent.getId());
         request.setMetadata(metadata);
