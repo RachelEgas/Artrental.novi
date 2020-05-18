@@ -9,6 +9,7 @@ import com.example.Artrental.novi.payload.PagedResponse;
 import com.example.Artrental.novi.payload.RentRequest;
 import com.example.Artrental.novi.payload.RentResponse;
 import com.example.Artrental.novi.payload.mollie.PaymentCreateResponse;
+import com.example.Artrental.novi.payload.mollie.PaymentStatusResponse;
 import com.example.Artrental.novi.repository.ArtRepository;
 import com.example.Artrental.novi.repository.RentRepository;
 import com.example.Artrental.novi.repository.UserRepository;
@@ -31,6 +32,7 @@ import java.net.URISyntaxException;
 import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class RentService {
@@ -100,5 +102,21 @@ public class RentService {
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", rent.getCreatedBy()));
 
         return ModelMapper.mapRentToRentResponse(rent, creator);
+    }
+
+    public void GetPaymentAndSaveResponseToRent(String id){
+        try {
+            ResponseEntity<PaymentStatusResponse> result = paymentService.getMolliePayment(id);
+            Optional<Rent> rent = rentRepository.findById(Long.parseLong(result.getBody().metadata.getOrder_id(), 10));
+            if(rent.isPresent()){
+                rent.get().setPayed(result.getBody().status == "payed");
+                rentRepository.save(rent.get());
+            }
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+
     }
 }

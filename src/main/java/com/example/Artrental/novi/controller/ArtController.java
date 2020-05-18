@@ -35,6 +35,7 @@ public class ArtController {
     private ArtService artService;
 
     @GetMapping
+    @PreAuthorize("hasRole('USER')")
     public PagedResponse<ArtResponse> getArt(@CurrentUser UserPrincipal currentUser,
                                                @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
                                                @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) {
@@ -42,7 +43,7 @@ public class ArtController {
     }
 
     @PostMapping(path = "/create", consumes = MediaType.APPLICATION_JSON_VALUE)
-//    @PreAuthorize("hasRole('ROLE_STAFF')")
+    @PreAuthorize("hasRole('STAFF')")
     public ResponseEntity<?> createArt(@Valid @RequestBody ArtRequest artRequest) {
         Art art = artService.createArt(artRequest);
 
@@ -55,6 +56,7 @@ public class ArtController {
     }
 
     @GetMapping("/{artId}")
+    @PreAuthorize("hasRole('USER')")
     public ArtResponse getArtById(@CurrentUser UserPrincipal currentUser,
                                   @PathVariable Long artId) {
         return artService.getArtById(artId, currentUser);

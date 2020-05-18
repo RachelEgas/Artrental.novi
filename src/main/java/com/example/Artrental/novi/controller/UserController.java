@@ -41,7 +41,9 @@ public class UserController {
     @GetMapping("/user/me")
     @PreAuthorize("hasRole('USER')")
     public UserSummary getCurrentUser(@CurrentUser UserPrincipal currentUser) {
-        UserSummary userSummary = new UserSummary(currentUser.getId(), currentUser.getUsername(), currentUser.getName());
+        User user = userRepository.findByUsername(currentUser.getUsername())
+                .orElseThrow(() -> new ResourceNotFoundException("User", "username", currentUser.getUsername()));
+        UserSummary userSummary = new UserSummary(currentUser.getId(), currentUser.getUsername(), currentUser.getName(), user.getRoles());
         return userSummary;
     }
 
@@ -58,6 +60,7 @@ public class UserController {
     }
 
     @GetMapping("/users/{username}")
+    @PreAuthorize("hasRole('USER')")
     public UserProfile getUserProfile(@PathVariable(value = "username") String username) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
@@ -73,6 +76,7 @@ public class UserController {
     }
 
     @GetMapping("/users/{username}/art")
+    @PreAuthorize("hasRole('STAFF')")
     public PagedResponse<ArtResponse> getArtCreatedBy(@PathVariable(value = "username") String username,
                                                       @CurrentUser UserPrincipal currentUser,
                                                       @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
@@ -81,6 +85,7 @@ public class UserController {
     }
 
     @GetMapping("/users/{username}/rent")
+    @PreAuthorize("hasRole('USER')")
     public PagedResponse<RentResponse> getRentCreatedBy(@PathVariable(value = "username")String username,
                                                         @CurrentUser UserPrincipal currentUser,
                                                         @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
